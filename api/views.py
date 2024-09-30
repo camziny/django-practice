@@ -34,3 +34,56 @@ def fetch_weather(request, city):
         else:
             return JsonResponse({'error': 'Failed to fetch weather data'}, status=500)
         
+def search_books(request,title):
+        base_url = 'https://openlibrary.org/search.json'
+        params = {'title': title}
+
+        response = requests.get(base_url, params=params)
+
+        if response.status_code == 200:
+            return JsonResponse(response.json(), safe=False)
+        else:
+            return JsonResponse({'error': 'Failed to fetch books'}, status=500)
+        
+def search_books_paginated(request, title, page=1):
+        base_url = 'https://openlibrary.org/search.json'
+        params = {
+          'title': title,
+          'page': page
+     }
+
+        response = requests.get(base_url, params=params)
+
+        if response.status_code == 200:
+            return JsonResponse(response.json(), safe=False)
+        else:
+            return JsonResponse({'error': 'Failed to fetch books'}, status=500)
+        
+def search_books_with_filters(request):
+        title = request.GET.get('title', '')
+        author = request.GET.get('author', '')
+        publish_year = request.GET.get('publish_year', '')
+
+        base_url = 'https://openlibrary.org/search.json'
+        params = {
+             'title': title,
+             'author': author,
+             'publish_year': publish_year
+        }
+
+        response = requests.get(base_url, params=params)
+
+        if response.status_code == 200:
+            return JsonResponse(response.json(), safe=False)
+        else: 
+            return JsonResponse({'error': 'Failed to fetch books'}, status=500)
+        
+def get_book_details(request, olid):
+    base_url = f'https://openlibrary.org/works/{olid}.json'
+
+    response = requests.get(base_url)
+
+    if response.status_code == 200:
+         return JsonResponse(response.json(), safe=False)
+    else:
+         return JsonResponse({'error': 'Failed to fetch book details'}, status=500)

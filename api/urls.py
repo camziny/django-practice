@@ -8,4 +8,7 @@ urlpatterns = [
     path('bye/', views.bye_world, name='bye_world'), 
     path('posts/', views.fetch_posts, name='fetch_posts'),
     path('weather/<str:city>/', views.fetch_weather),
+    path('books/<str:title>/', views.search_books),
+    path('books/search/', views.search_books_with_filters, name='search_books_with_filters'),
+    path('book/details/<str:olid>/', views.get_book_details, name='get_book_details')
 ]
