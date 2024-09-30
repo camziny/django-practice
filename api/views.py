@@ -119,3 +119,11 @@ def dogs_by_breed(request):
           return JsonResponse(response.json(), safe=False)
      else:
           return JsonResponse({'error': 'Failed to fetch dogs by breed'}, status=500)
+     
+def browse_dog_breed_list(request, breed):
+     response = requests.get(f'https://dog.ceo/api/breed/{breed}/images/random')
+
+     if response.status_code ==200:
+          return JsonResponse(response.json(), safe=False)
+     else:
+          return JsonResponse({'error': 'Failed to fetch all breeds'}, status=500)
