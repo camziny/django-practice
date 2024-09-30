@@ -84,6 +84,38 @@ def get_book_details(request, olid):
     response = requests.get(base_url)
 
     if response.status_code == 200:
-         return JsonResponse(response.json(), safe=False)
+        return JsonResponse(response.json(), safe=False)
     else:
-         return JsonResponse({'error': 'Failed to fetch book details'}, status=500)
+        return JsonResponse({'error': 'Failed to fetch book details'}, status=500)
+    
+def random_dog_image(request):
+    response = requests.get('https://dog.ceo/api/breeds/image/random')
+
+    if response.status_code == 200:
+        return JsonResponse(response.json(), safe=False)
+    else:
+        return JsonResponse({'error': 'Failed to fetch dog image'}, status=500) 
+
+def random_dog_breed_image(request, breed):
+     response = requests.get(f'https://dog.ceo/api/breed/{breed}/images/random')
+
+     if response.status_code == 200:
+          return JsonResponse(response.json(), safe=False)
+     else:
+          return JsonResponse({'error': f'Failed to fetch {breed} image'}, status=500)
+     
+def list_all_breeds(request):
+     response = requests.get('https://dog.ceo/api/breeds/list/all')
+
+     if response.status_code == 200:
+          return JsonResponse(response.json(), safe=False)
+     else:
+          return JsonResponse({'error': 'Failed to fetch all breeds'}, status=500)
+     
+def dogs_by_breed(request):
+     response = requests.get('https://dog.ceo/api/breed/hound/images')
+
+     if response.status_code ==200:
+          return JsonResponse(response.json(), safe=False)
+     else:
+          return JsonResponse({'error': 'Failed to fetch dogs by breed'}, status=500)
