@@ -1,0 +1,26 @@
+# .gitignore
+
+# Virtual environment
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Django migration files
+*/migrations/*.pyc
+*/migrations/*.py~
+
+# Sensitive information
+.env
+
+# Django static and media files
+staticfiles/
+media/
+
+# Database files
+*.sqlite3
+
+# MacOS system files
+.DS_Store
