@@ -15,5 +15,6 @@ urlpatterns = [
     path('random-dog/<str:breed>/', views.random_dog_breed_image, name='random_dog_breed_image'),
     path('dog-breeds/', views.list_all_breeds, name='list_all_breeds'),
     path('dogs-by-breed/', views.dogs_by_breed, name='dogs_by_breed'),
-    path('dog-breed-list/<str:breed>/', views.browse_dog_breed_list, name='browse_dog_breed_list')
+    path('dog-breed-list/<str:breed>/', views.browse_dog_breed_list, name='browse_dog_breed_list'),
+    path('comments-by-post/<int:post_id>/', views.comments_by_post, name='comments_by_post'),
 ]
