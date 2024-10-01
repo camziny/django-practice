@@ -123,7 +123,15 @@ def dogs_by_breed(request):
 def browse_dog_breed_list(request, breed):
      response = requests.get(f'https://dog.ceo/api/breed/{breed}/images/random')
 
-     if response.status_code ==200:
+     if response.status_code == 200:
           return JsonResponse(response.json(), safe=False)
      else:
           return JsonResponse({'error': 'Failed to fetch all breeds'}, status=500)
+     
+def comments_by_post(request, post_id):
+     response = requests.get(f'https://jsonplaceholder.typicode.com/posts/{post_id}/comments')
+
+     if response.status_code == 200:
+          return JsonResponse(response.json(), safe=False)
+     else:
+          return JsonResponse({'error': f'Failed to fetch comments for post {post_id}'}, status=500)
