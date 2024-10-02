@@ -17,4 +17,9 @@ urlpatterns = [
     path('dogs-by-breed/', views.dogs_by_breed, name='dogs_by_breed'),
     path('dog-breed-list/<str:breed>/', views.browse_dog_breed_list, name='browse_dog_breed_list'),
     path('comments-by-post/<int:post_id>/', views.comments_by_post, name='comments_by_post'),
+    path('launches/', views.space_x_launches, name='space_x_launches'),
+    path('launch-details/', views.space_x_launches_details, name='space_x_launches_details'),
+    path('past-launches/', views.past_launches, name='past_launches'),
+    path('rocket-details/', views.rocket_details, name='rocket_details'),
+    path('launches_by_rocket/', views.launches_by_rocket, name='launches_by_rocket')
 ]
