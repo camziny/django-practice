@@ -1,0 +1,148 @@
+input:
+- plates: list of plate polygons
+- files: list of files, where each file is a list of slivers (geometries at timestamps)
+- num_patches: total number of patches to generate (e.g., 100)
+- geometry_library: library to perform geometric operations
+
+output:
+- patches: list of generated patches (each one is a square foot polygon)
+
+begin
+
+initialize empty list of patches = []
+initialize empty dictionary existing_patches = {}
+
+step 1: ensure each plate has at least one patch
+
+for each plate in plates do
+    while true do
+        // step 1.1: identify a file that covers the plate
+        files_covering_plate = get_files_covering_plate(plate, files)
+        if files_covering_plate is empty then
+            break
+        end if
+
+        file = select_random_file(files_covering_plate)
+        file_geometry_within_plate = get_file_geometry_within_plate(file, plate)
+
+        // step 1.2: check if area is at least 1 square foot
+        if area(file_geometry_within_plate) >= 1 square foot then
+            // step 1.3: generate a patch within the geometry
+            patch = generate_random_patch_within_geometry(file_geometry_within_plate)
+
+            // step 1.4: ensure no overlap with other patches on this plate
+            if not overlaps(patch, patches) then
+                append patch to patches
+                existing_patches[plate] = [patch]
+                break // patch successfully placed for this plate
+            end if
+        end if
+    end while
+end for
+
+step 2: add remaining patches
+
+remaining_patches = num_patches - length(patches)
+
+while length(patches) < num_patches do
+    // randomly select a plate that already has a patch
+    plate = select_random_plate(plates)
+
+    // get the list of existing patches on the selected plate
+    existing_patches_on_plate = existing_patches[plate]
+
+    // step 2.1: compute the available area on the plate
+    available_area = get_available_area(plate, existing_patches_on_plate)
+
+    // step 2.2: generate a new patch within the available area
+    new_patch = generate_non_overlapping_patch(available_area)
+
+    // step 2.3: ensure no overlap and assign patch to the plate
+    if not overlaps(new_patch, existing_patches_on_plate) then
+        append new_patch to patches
+        append new_patch to existing_patches[plate]
+    end if
+end while
+
+return patches
+
+// helper functions
+
+function get_files_covering_plate(plate, files):
+    initialize empty list files_covering_plate = []
+    for each file in files do
+        file_geometry = union_of_slivers(file)
+        if geometry_library.intersects(file_geometry, plate) then
+            append file to files_covering_plate
+        end if
+    end for
+    return files_covering_plate
+end function
+
+function get_file_geometry_within_plate(file, plate):
+    file_geometry = union_of_slivers(file)
+    return geometry_library.intersection(file_geometry, plate)
+end function
+
+function union_of_slivers(file):
+    initialize geometry = empty_geometry
+    for each sliver in file do
+        geometry = geometry_library.union(geometry, sliver)
+    end for
+    return geometry
+end function
+
+function generate_random_patch_within_geometry(geometry):
+    while true do
+        random_point = generate_random_point_within_polygon(geometry)
+        patch = create_square_foot_patch_at_point(random_point)
+        if geometry_library.contains(geometry, patch) then
+            return patch
+        end if
+    end while
+end function
+
+function overlaps(patch, existing_patches):
+    for each existing_patch in existing_patches do
+        if geometry_library.intersects(patch, existing_patch) then
+            return true
+        end if
+    end for
+    return false
+end function
+
+function get_available_area(plate, existing_patches_on_plate):
+    remaining_area = plate
+    for each patch in existing_patches_on_plate do
+        remaining_area = geometry_library.subtract(remaining_area, patch)
+    end for
+    return remaining_area
+end function
+
+function generate_non_overlapping_patch(available_area):
+    while true do
+        random_point = generate_random_point_within_polygon(available_area)
+        patch = create_square_foot_patch_at_point(random_point)
+        if geometry_library.contains(available_area, patch) then
+            return patch
+        end if
+    end while
+end function
+
+function create_square_foot_patch_at_point(point):
+    side_length = sqrt(1) // 1 square foot
+    half_side = side_length / 2
+
+    // define the square's vertices around the random point
+    square_patch = polygon with vertices:
+        (point.x - half_side, point.y - half_side)
+        (point.x + half_side, point.y - half_side)
+        (point.x + half_side, point.y + half_side)
+        (point.x - half_side, point.y + half_side)
+
+    return square_patch
+end function
+
+function generate_random_point_within_polygon(geometry):
+    return geometry_library.random_point_within_polygon(geometry)
+end function
